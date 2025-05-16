@@ -1,0 +1,47 @@
+
+version: 2
+models:
+  - name: daily_encounter
+    description: "Daily encounter table"
+    columns:
+      - name: date
+        description: "Date partition of data"
+        data_type: DATE
+        tests:
+          - not_null
+
+      - name: dim_patient_key
+        description: "Surogate ID of dim patient"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: dim_payer_key
+        description: "Surogate ID of dim payer"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: total_encounter_num
+        description: "Number of Total encounter"
+        data_type: INTEGER
+
+      - name: total_procedure_num
+        description: "Number of Total procedure"
+        data_type: INTEGER
+
+      - name: total_diagnosis_num
+        description: "Number of Total diagnosis"
+        data_type: INTEGER
+
+      - name: total_claim_amount
+        description: "Amount of total claim"
+        data_type: FLOAT
+
+      - name: total_coverage_amount
+        description: "Amount of total coverage"
+        data_type: FLOAT
+      
+      - name: total_patient_pay_amount
+        description: "Amount of total patient pay"
+        data_type: FLOAT

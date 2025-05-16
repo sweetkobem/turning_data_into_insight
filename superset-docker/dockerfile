@@ -1,0 +1,14 @@
+FROM apache/superset:latest
+
+USER root
+
+# Install Hive support via PyPI
+RUN pip install --no-cache-dir \
+    pyhive \
+    thrift \
+    thrift-sasl \
+    pillow \
+    psycopg2-binary \
+    pandas
+
+USER superset

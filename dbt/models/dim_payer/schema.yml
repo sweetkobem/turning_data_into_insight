@@ -1,0 +1,50 @@
+version: 2
+models:
+  - name: dim_payer
+    description: "payer dimension table"
+    columns:
+      - name: dim_payer_key
+        description: "The unique ID of dim table"
+        data_type: VARCHAR
+        tests:
+          - unique
+          - not_null
+
+      - name: payer_id
+        description: "The unique ID of the payer"
+        data_type: VARCHAR
+        tests:
+          - unique
+          - not_null
+
+      - name: payer_name
+        description: "Name of the payer"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: address
+        description: "Address of the patient"
+        data_type: TEXT
+
+      - name: city
+        description: "City of the patient"
+        data_type: VARCHAR
+
+      - name: zip
+        description: "Zip of the patient"
+        data_type: INTEGER
+
+      - name: start_date
+        description: "Start Date dim"
+        data_type: DATE
+        tests:
+          - not_null
+
+      - name: end_date
+        description: "End Date dim"
+        data_type: DATE
+
+      - name: is_active
+        description: "Flag active of dim data"
+        data_type: BOOLEAN

@@ -1,0 +1,7 @@
+FROM bitnami/spark:3.5
+
+# Copy Iceberg JARs into Spark's classpath
+COPY jars/*.jar /opt/bitnami/spark/jars/
+
+# Copy spark-defaults.conf
+COPY config/spark-defaults.conf /opt/bitnami/spark/conf/

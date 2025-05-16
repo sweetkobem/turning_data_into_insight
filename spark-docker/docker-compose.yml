@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  spark-master:
+    build: .
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_WEBUI_PORT=8010
+    ports:
+      - "7077:7077"   # Spark master port
+      - "8010:8010"   # Spark UI port (optional)
+
+  spark-worker:
+    build: .
+    container_name: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER=spark://spark-master:7077  # Link to the Spark master
+    depends_on:
+      - spark-master
+
+  spark-thrift:
+    build: .
+    container_name: spark-thrift
+    depends_on:
+      - spark-master
+    env_file:
+      - .env
+    environment:
+      - SPARK_MODE=thriftserver
+    command:
+      - /opt/bitnami/spark/sbin/start-thriftserver.sh
+      - --master
+      - spark://spark-master:7077
+      - --conf
+      - spark.executor.cores=2
+      - --conf
+      - spark.cores.max=2
+    ports:
+      - "10000:10000"
+
+  spark-connect:
+    build: .
+    container_name: spark-connect
+    depends_on:
+      - spark-master
+    env_file:
+      - .env
+    environment:
+      - SPARK_MODE=connect
+    command:
+      - spark-submit
+      - --class
+      - org.apache.spark.sql.connect.service.SparkConnectServer
+      - local:///opt/bitnami/spark/examples/jars/spark-examples_2.12-3.5.0.jar
+    ports:
+      - "15002:15002"

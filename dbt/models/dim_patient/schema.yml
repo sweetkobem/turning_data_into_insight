@@ -1,0 +1,88 @@
+version: 2
+models:
+  - name: dim_patient
+    description: "Patient dimension table"
+    columns:
+      - name: dim_patient_key
+        description: "The unique ID of dim table"
+        data_type: VARCHAR
+        tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "The unique ID of the patient"
+        data_type: VARCHAR
+        tests:
+          - unique
+          - not_null
+
+      - name: patient_fullname
+        description: "Full name of the patient"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: birth_date
+        description: "Birth date of the patient"
+        data_type: DATE
+        tests:
+          - not_null
+
+      - name: death_date
+        description: "Death date of the patient"
+        data_type: DATE
+      
+      - name: marital_status
+        description: "Marital status of the patient"
+        data_type: VARCHAR
+      
+      - name: race
+        description: "Race of the patient"
+        data_type: VARCHAR
+      
+      - name: ethnicity
+        description: "Etnicity of the patient"
+        data_type: VARCHAR
+
+      - name: gender
+        description: "Gender of the patient"
+        data_type: VARCHAR
+
+      - name: birth_place
+        description: "Birth place of the patient"
+        data_type: VARCHAR
+
+      - name: address
+        description: "Address of the patient"
+        data_type: TEXT
+
+      - name: city
+        description: "City of the patient"
+        data_type: VARCHAR
+
+      - name: state
+        description: "State of the patient"
+        data_type: VARCHAR
+
+      - name: county
+        description: "Country of the patient"
+        data_type: VARCHAR
+
+      - name: zip
+        description: "Zip of the patient"
+        data_type: INTEGER
+
+      - name: start_date
+        description: "Start Date dim"
+        data_type: DATE
+        tests:
+          - not_null
+
+      - name: end_date
+        description: "End Date dim"
+        data_type: DATE
+
+      - name: is_active
+        description: "Flag active of dim data"
+        data_type: BOOLEAN

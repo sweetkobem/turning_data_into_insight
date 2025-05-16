@@ -1,0 +1,63 @@
+
+version: 2
+models:
+  - name: fact_procedure
+    description: "Fact rocedure table"
+    columns:
+      - name: date
+        description: "Date partition of data"
+        data_type: DATE
+        tests:
+          - not_null
+
+      - name: encounter_id
+        description: "The unique ID of encounter"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: code
+        description: "Code of encounter"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: dim_patient_key
+        description: "The unique ID of the patient"
+        data_type: VARCHAR
+        tests:
+          - not_null
+
+      - name: description
+        description: "Description of encounter"
+        data_type: TEXT
+      
+      - name: reason_code
+        description: "reason code of encounter"
+        data_type: VARCHAR
+
+      - name: reason_description
+        description: "Reason description of encounter"
+        data_type: TEXT
+
+      - name: start_time
+        description: "Start time of encounter"
+        data_type: DATETIME
+        tests:
+          - not_null
+
+      - name: stop_time
+        description: "Stop time of encounter"
+        data_type: DATETIME
+
+      - name: base_cost_amount
+        description: "Base cost amount of encounter"
+        data_type: FLOAT
+        tests:
+          - not_null
+      
+      - name: duration_minute_num
+        description: "Duration in minute"
+        data_type: INTEGER
+        tests:
+          - not_null

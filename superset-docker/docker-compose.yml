@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: superset_db
+    env_file:
+      - .env
+    volumes:
+      - superset_db_data:/var/lib/postgresql/data # <--- persistent volume
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: superset_redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # This tells Flask-Limiter to use Redis as the backend
+      RATELIMIT_STORAGE_URI: redis://redis:6379/0
+    ports:
+      - "6379:6379"
+
+  superset:
+    build: .
+    container_name: superset_app
+    env_file:
+      - .env
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset:/app/pythonpath
+      - ./init/setup.sh:/app/setup.sh
+      - ./.env:/app/.env
+    depends_on:
+      - redis
+      - postgres
+    entrypoint: ["/bin/bash", "/app/setup.sh"]
+
+volumes:
+  superset_db_data:
