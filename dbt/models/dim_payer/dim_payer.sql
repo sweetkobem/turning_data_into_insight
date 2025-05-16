@@ -1,15 +1,19 @@
 {{ config(
-    materialized='incremental',  
-    unique_key='dim_payer_key',
-    format='iceberg'
+    materialized='custom_incremental_iceberg'
 ) }}
 
 {% set execution_date = var('execution_date') %}
 {% set md5_column = var('md5_column') %}
 
-{% if is_incremental() %}
-  {% set max_end_date = run_query("SELECT CAST(MAX(start_date) AS STRING) FROM medalion.db.dim_payer WHERE is_active = TRUE").columns[0][0] %}
+{% set result = run_query("SHOW TABLES in "~ target.schema ~" LIKE '"~ this.name ~"'") %}
+{% if result and result.rows %}
+    {% set table_exists = result.rows[0]['tableName'] %}
+{% else %}
+    {% set table_exists = none %}
+{% endif %}
 
+{% if table_exists %}
+  {% set max_end_date = run_query("SELECT CAST(MAX(start_date) AS STRING) FROM "~ this ~" WHERE is_active = TRUE").columns[0][0] %}
 {% else %}
   {% set max_end_date = None %}
 {% endif %}
@@ -30,11 +34,13 @@
         TRUE AS is_active
 
     FROM medalion.db.slv_payers
-    {% if is_incremental() %}
-    WHERE {{ md5_column }} NOT IN (SELECT {{ md5_column }} FROM {{ this }} WHERE is_active = TRUE)  -- Avoid duplicates in incremental loads
+    {% if max_end_date %}
+      WHERE {{ md5_column }} NOT IN (SELECT {{ md5_column }} FROM {{ this }} WHERE is_active = TRUE)  -- Avoid duplicates in incremental loads
     {% endif %}
 
-  ), old_data AS (
+  )
+  {% if max_end_date %}
+  , old_data AS (
     SELECT
       dim_patient_key,
       patient_id,
@@ -60,10 +66,11 @@
     AND end_date IS NULL
 
   )
+  {% endif %}
   SELECT * FROM new_data
-  {% if is_incremental() %}
-  UNION ALL
-  SELECT * FROM old_data
+  {% if max_end_date %}
+    UNION ALL
+    SELECT * FROM old_data
   {% endif %}
 
 {% else %}
